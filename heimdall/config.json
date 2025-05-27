@@ -40,6 +40,6 @@
     "PGID": "int",
     "TZ": "str?"
   },
-  "environment": {},
+  "environment": {}
 
 }
