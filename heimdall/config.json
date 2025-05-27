@@ -41,5 +41,5 @@
     "TZ": "str?"
   },
   "environment": {},
-#  "image": "MeighenHouse/hassio-heimdall-{arch}"
+
 }
