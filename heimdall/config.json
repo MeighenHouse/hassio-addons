@@ -9,7 +9,7 @@
     "version_regex": "(\\d+\\.\\d+\\.\\d+)-(ls\\d+)"
   },
   "description": "Application Dashboard",
-  "url": "https://github.com/petersendev/hassio-addons/tree/master/heimdall#readme",
+  "url": "https://github.com/MeighenHouse/hassio-addons/tree/master/heimdall#readme",
   "startup": "services",
   "arch": [
     "aarch64",
@@ -41,5 +41,5 @@
     "TZ": "str?"
   },
   "environment": {},
-  "image": "petersendev/hassio-heimdall-{arch}"
+#  "image": "MeighenHouse/hassio-heimdall-{arch}"
 }
