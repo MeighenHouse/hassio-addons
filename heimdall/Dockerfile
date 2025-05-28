@@ -1,10 +1,19 @@
 FROM alpine:3.18
 
-# Install necessary packages
-RUN apk add --no-cache \
+# Add community repository for additional packages
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+
+# Update package index and install necessary packages
+RUN apk update && apk add --no-cache \
+    bash \
+    curl \
+    jq \
+    sed \
+    nginx \
     php8 \
     php8-fpm \
     php8-openssl \
+    php8-pdo \
     php8-pdo_sqlite \
     php8-mbstring \
     php8-tokenizer \
@@ -13,7 +22,6 @@ RUN apk add --no-cache \
     php8-session \
     php8-json \
     php8-cli \
-    nginx \
     sqlite
 
 # Copy application files
