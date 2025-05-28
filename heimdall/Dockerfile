@@ -1,34 +1,34 @@
-ARG BUILD_FROM
-# hadolint ignore=DL3006
-FROM $BUILD_FROM
+# Start from a minimal base image with bash and required tools
+FROM alpine:3.18
 
+# Install dependencies
 RUN apk add --no-cache \
-        jq \
-    && curl -J -L -o /tmp/bashio.tar.gz \
-        "https://github.com/hassio-addons/bashio/archive/v0.7.1.tar.gz" \
-    && mkdir /tmp/bashio \
-    && tar zxvf \
-        /tmp/bashio.tar.gz \
-        --strip 1 -C /tmp/bashio \
-    \
-    && mv /tmp/bashio/lib /usr/lib/bashio \
-    && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
-    && rm -fr /tmp/* 
+    bash \
+    curl \
+    jq \
+    sed \
+    nginx \
+    php8 \
+    php8-fpm \
+    php8-curl \
+    php8-json \
+    php8-phar \
+    php8-iconv \
+    php8-openssl \
+    php8-common \
+    php8-cli
 
-# fix folders for hassio environment
-RUN sed -i "s|/config/keys/cert.crt|/ssl/fullchain.pem|g" /defaults/nginx/*.sample && \
-    sed -i "s|/config/keys/cert.key|/ssl/privkey.pem|g" /defaults/nginx/*.sample && \    
-    sed -i "s|/config|/config/heimdall|g" /defaults/nginx/*.sample && \
-    sed -i "s|/config|/config/heimdall|g" /defaults/nginx/site-confs/* && \
-    sed -i "s|/config|/config/heimdall|g" /migrations/* && \
-    sed -i "s|/config/keys/cert.crt|/ssl/fullchain.pem|g" /etc/cont-init.d/* && \
-    sed -i "s|/config/keys/cert.key|/ssl/privkey.pem|g" /etc/cont-init.d/* && \
-    sed -i "s|/config/heimdall/keys|/ssl|g" /etc/cont-init.d/* && \    
-    sed -i "s|/config|/config/heimdall|g" /etc/cont-init.d/* && \
-    sed -i "s|/config|/config/heimdall|g" /etc/services.d/nginx/* && \
-    sed -i "s|/config|/config/heimdall|g" /etc/logrotate.d/* && \
-    sed -i "s|/config|/config/heimdall|g" /etc/nginx/*.conf && \
-    sed -i "s|/config|/config/heimdall|g" /etc/php8/*.conf
+# Copy addon files (adjust the source path if needed)
+COPY rootfs/ /
 
-# copy local files
-COPY root/ /
+# Copy the fix-paths.sh script into the container
+COPY fix-paths.sh /usr/local/bin/fix-paths.sh
+
+# Make it executable and run it to fix config paths
+RUN chmod +x /usr/local/bin/fix-paths.sh && /usr/local/bin/fix-paths.sh
+
+# Expose any ports your addon listens on (example: 80 for nginx)
+EXPOSE 80
+
+# Define the init command for the container (adjust if your addon uses a specific entrypoint)
+CMD [ "/init" ]
